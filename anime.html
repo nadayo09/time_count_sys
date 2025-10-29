@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>individual anime timer</title>
+  <script src="total.js" defer></script>
+  <style>
+    body {
+      background: #071126; color: #e6eef8;
+      font-family: Inter, "Noto Sans KR", sans-serif;
+      padding: 30px;
+    }
+    .episode {
+      background: rgba(255,255,255,0.06);
+      padding: 14px; margin: 8px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .episode.selected {
+      background: linear-gradient(135deg,#4f46e5,#06b6d4);
+      color:#001; font-weight:600;
+    }
+    .back {
+      display:inline-block;
+      margin-bottom:20px;
+      color:#9fb0ff;
+      text-decoration:none;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back">←go back to the main</a>
+  <h1 id="animeTitle"></h1>
+  <p>Clicking on an episode will add 20 minutes to the total time.</p>
+
+  <div id="episodes"></div>
+
+  <p style="margin-top:20px;">
+    total time: <strong id="totalMinutes">0</strong>min
+    (<span id="hours">0</span>hours <span id="mins">0</span>mins)
+  </p>
+
+  <script>
+    const name = localStorage.getItem('currentAnime') || 'Unknown';
+    document.getElementById('animeTitle').textContent = name;
+
+    const container = document.getElementById('episodes');
+    const count = 12;  
+    const perEp = 20;  
+
+    for(let i=1;i<=count;i++){
+      const ep=document.createElement('div');
+      ep.className='episode';
+      ep.textContent=`Episode ${i}`;
+      ep.onclick=()=>{
+        ep.classList.toggle('selected');
+        saveTime();
+      };
+      container.appendChild(ep);
+    }
+
+    function saveTime(){
+      const selected=document.querySelectorAll('.episode.selected').length;
+      const total=selected*perEp;
+      const key=`anime_${name}`;
+      localStorage.setItem(key,total);
+      updateDisplay(total);
+      updateGlobalTotal();
+    }
+
+    function updateDisplay(total){
+      document.getElementById('totalMinutes').textContent=total;
+      document.getElementById('hours').textContent=Math.floor(total/60);
+      document.getElementById('mins').textContent=total%60;
+    }
+
+     const saved=localStorage.getItem(`anime_${name}`);
+    if(saved){
+      const n=parseInt(saved)/perEp;
+      [...document.querySelectorAll('.episode')].slice(0,n).forEach(e=>e.classList.add('selected'));
+      updateDisplay(parseInt(saved));
+    }
+  </script>
+</body>
+</html>

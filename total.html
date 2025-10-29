@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anime Total Watch Time</title>
+  <script src="total.js" defer></script>
+  <style>
+    body {
+      background:#0b1220;
+      color:#e6eef8;
+      font-family:Inter, 'Noto Sans KR', sans-serif;
+      padding:40px;
+      text-align:center;
+    }
+    h1 {margin-bottom:20px;}
+    table {
+      width:80%;
+      margin:0 auto 30px auto;
+      border-collapse:collapse;
+      background:rgba(255,255,255,0.04);
+      border-radius:10px;
+      overflow:hidden;
+    }
+    th, td {
+      padding:12px;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+    th {background:rgba(255,255,255,0.08);}
+    tr:last-child td {border-bottom:none;}
+    .total-box {
+      background:rgba(255,255,255,0.07);
+      display:inline-block;
+      padding:20px 30px;
+      border-radius:14px;
+    }
+    a {color:#9fc1ff;display:inline-block;margin-top:20px;}
+  </style>
+</head>
+<body>
+  <h1>📺 Anime Watch Time Summary</h1>
+
+  <table id="animeTable">
+    <thead>
+      <tr>
+        <th>Anime Title</th>
+        <th>Watch Time</th>
+        <th>Episodes Watched</th>
+        <th>Progress</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="total-box">
+    Total: <strong id="totalTime">0</strong> min
+    (<span id="totalHours">0</span> hr <span id="totalMins">0</span> min)
+  </div>
+
+  <a href="index.html">← Back to Main</a>
+
+  <script>
+    const totalEpisodes = {
+      "Attack on Titan": 12,
+      "Naruto": 12,
+      "One Piece": 12
+    };
+    const perEp = 20;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const tbody = document.querySelector('#animeTable tbody');
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('anime_'));
+      let total = 0;
+
+      keys.forEach(key => {
+        const minutes = parseInt(localStorage.getItem(key) || '0');
+        const name = key.replace('anime_', '');
+        const selectedEps = Math.round(minutes / perEp);
+        const maxEps = totalEpisodes[name] || 0;
+        const progress = maxEps ? Math.round(selectedEps / maxEps * 100) : 0;
+        total += minutes;
+
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${name}</td>
+                         <td>${minutes} min (${h} hr ${m} min)</td>
+                         <td>${selectedEps} / ${maxEps}</td>
+                         <td>${progress}%</td>`;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('totalTime').textContent = total;
+      document.getElementById('totalHours').textContent = Math.floor(total / 60);
+      document.getElementById('totalMins').textContent = total % 60;
+    });
+  </script>
+</body>
+</html>

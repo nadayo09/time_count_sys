@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>main anime timer</title>
+  <script src="total.js" defer></script>
+  <style>
+    body {
+      background: #0f172a; color: #e6eef8;
+      font-family: Inter, "Noto Sans KR", sans-serif;
+      padding: 40px; text-align: center;
+    }
+    h1 {font-size: 24px; margin-bottom: 20px;}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 30px auto;
+      max-width: 800px;
+    }
+    .card {
+      background: rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 20px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .card:hover {background: rgba(255,255,255,0.15);}
+    .total-box {
+      margin-top: 30px;
+      background: rgba(255,255,255,0.08);
+      display: inline-block;
+      padding: 16px 22px;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 my anime timer</h1>
+  <p>Click one of the anime below to record the episode time.</p>
+
+  <div class="grid">
+    <div class="card" onclick="goAnime('Attack on Titan')">Attack on Titan</div>
+    <div class="card" onclick="goAnime('Naruto')">Naruto</div>
+    <div class="card" onclick="goAnime('One Piece')">One Piece</div>
+  </div>
+
+  <div class="total-box">
+    total watching time: <strong id="totalTime">0</strong>min
+    (<span id="totalHours">0</span>hours <span id="totalMins">0</span>mins)
+  </div>
+
+  <p style="margin-top:20px;"><a href="total.html" style="color:#9fc1ff;">👉 see more</a></p>
+
+  <script>
+    function goAnime(name){
+      localStorage.setItem('currentAnime', name);
+      location.href = 'anime.html';
+    }
+  </script>
+</body>
+</html>
